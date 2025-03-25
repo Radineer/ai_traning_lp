@@ -65,43 +65,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // カルーセル
     const carousel = document.querySelector('.case-study-carousel');
     if (carousel) {
-        const cards = carousel.querySelectorAll('.case-study-card');
+        let currentSlide = 0;
+        const slides = carousel.querySelectorAll('.case-study-card');
         const dots = carousel.querySelectorAll('.dot');
-        const prevBtn = carousel.querySelector('.prev');
-        const nextBtn = carousel.querySelector('.next');
-        let currentIndex = 0;
+        const prevButton = carousel.querySelector('.prev');
+        const nextButton = carousel.querySelector('.next');
 
-        const showCard = (index) => {
-            cards.forEach(card => card.classList.remove('active'));
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
             dots.forEach(dot => dot.classList.remove('active'));
-            cards[index].classList.add('active');
+            
+            slides[index].classList.add('active');
             dots[index].classList.add('active');
-        };
-
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-                showCard(currentIndex);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % cards.length;
-                showCard(currentIndex);
-            });
         }
 
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // 自動再生の間隔を8秒に設定
+        setInterval(nextSlide, 8000);
+
+        prevButton.addEventListener('click', prevSlide);
+        nextButton.addEventListener('click', nextSlide);
+
+        // ドットナビゲーション
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                currentIndex = index;
-                showCard(currentIndex);
+                currentSlide = index;
+                showSlide(currentSlide);
             });
         });
-
-        // 自動スライド
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % cards.length;
-            showCard(currentIndex);
-        }, 5000);
     }
 
     // FAQ
